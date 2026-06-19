@@ -1,12 +1,12 @@
 # Linux Fortune Character Device Driver
 
-`linux-fortune-char-device` is a small educational Linux kernel module that implements a character device driver. When the module is loaded, it creates:
+`linux-fortune-char-device` is a minimal educational Linux kernel module that implements a character device driver. When the module is loaded, it creates:
 
 ```text
 /dev/fortune_device
 ```
 
-Userspace programs can read a fortune string from the device and write a new fortune string back to it. The project is intentionally minimal, but it still uses the normal Linux character-device path: dynamic device-number allocation, `struct cdev`, file operations, kernel/user copying helpers, and kernel log debugging through `dmesg`.
+Userspace programs can read a fortune string from the device and write a new fortune string back to it. The project is intentionally small, but it follows the normal Linux character-device path: dynamic device-number allocation, `struct cdev`, file operations, kernel/user copying helpers, and kernel log debugging with `dmesg`.
 
 ## Features
 
@@ -24,9 +24,11 @@ Userspace programs can read a fortune string from the device and write a new for
 
 ```text
 .
-├── fortune_device.c
-├── Makefile
-└── README.md
+|-- fortune_device.c
+|-- Makefile
+|-- README.md
+|-- .gitignore
+`-- .gitattributes
 ```
 
 | File | Purpose |
@@ -34,10 +36,12 @@ Userspace programs can read a fortune string from the device and write a new for
 | `fortune_device.c` | Linux kernel module source code |
 | `Makefile` | Builds the module using the running kernel build system |
 | `README.md` | Project explanation, build instructions, testing notes, and debugging guide |
+| `.gitignore` | Ignores kernel build artifacts and editor files |
+| `.gitattributes` | Keeps source files and Makefile line endings as LF |
 
 ## Requirements
 
-Use a Linux machine, Linux VM, or a configured kernel-development environment with:
+Use a Linux machine, Linux VM, or configured kernel-development environment with:
 
 - Linux kernel headers for the running kernel
 - `make`
