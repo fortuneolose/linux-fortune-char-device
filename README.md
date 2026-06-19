@@ -195,6 +195,46 @@ fortune_device: stored <number> byte fortune
 fortune_device: closed
 ```
 
+## Demo Output
+
+The exact kernel version, build path, major number, timestamps, and file permissions can vary by machine. A successful run on a Linux VM looks like this:
+
+```bash
+$ make
+make -C /lib/modules/6.8.0-31-generic/build M=/home/fortune/linux-fortune-char-device modules
+make[1]: Entering directory '/usr/src/linux-headers-6.8.0-31-generic'
+  CC [M]  /home/fortune/linux-fortune-char-device/fortune_device.o
+  MODPOST /home/fortune/linux-fortune-char-device/Module.symvers
+  CC [M]  /home/fortune/linux-fortune-char-device/fortune_device.mod.o
+  LD [M]  /home/fortune/linux-fortune-char-device/fortune_device.ko
+  BTF [M] /home/fortune/linux-fortune-char-device/fortune_device.ko
+make[1]: Leaving directory '/usr/src/linux-headers-6.8.0-31-generic'
+
+$ sudo insmod fortune_device.ko
+
+$ lsmod | grep fortune_device
+fortune_device         12288  0
+
+$ ls -l /dev/fortune_device
+crw------- 1 root root 240, 0 Jun 19 18:42 /dev/fortune_device
+
+$ sudo cat /dev/fortune_device
+Fortune favors the prepared kernel hacker.
+
+$ echo "Kernel space is not user space." | sudo tee /dev/fortune_device
+Kernel space is not user space.
+
+$ sudo dmesg | tail -n 30
+[ 3482.091347] fortune_device: loaded with major=240 minor=0
+[ 3491.255083] fortune_device: opened
+[ 3491.255102] fortune_device: closed
+[ 3504.812774] fortune_device: opened
+[ 3504.812793] fortune_device: stored 32 byte fortune
+[ 3504.812810] fortune_device: closed
+
+$ sudo rmmod fortune_device
+```
+
 ## Unload And Clean
 
 Unload the module:
