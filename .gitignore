@@ -1,0 +1,22 @@
+# Linux kernel module build outputs
+*.ko
+*.mod
+*.mod.c
+*.o
+*.order
+*.symvers
+*.markers
+*.cmd
+*.tmp_versions
+.cache.mk
+
+# Kernel build directories/files
+.tmp_versions/
+Module.symvers
+modules.order
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
