@@ -18,6 +18,7 @@ Userspace programs can read a fortune string from the device and write a new for
 - Uses `copy_to_user()` and `copy_from_user()` for safe kernel/user transfers
 - Allocates a dynamic major number with `alloc_chrdev_region()`
 - Creates the device node automatically with `class_create()` and `device_create()`
+- Includes a small userspace C test program
 - Includes Makefile targets for build, load, unload, test, logs, and clean
 
 ## Repository Layout
@@ -25,6 +26,7 @@ Userspace programs can read a fortune string from the device and write a new for
 ```text
 .
 |-- fortune_device.c
+|-- fortune_user_test.c
 |-- Makefile
 |-- README.md
 |-- .gitignore
@@ -34,6 +36,7 @@ Userspace programs can read a fortune string from the device and write a new for
 | File | Purpose |
 | --- | --- |
 | `fortune_device.c` | Linux kernel module source code |
+| `fortune_user_test.c` | Userspace C program that reads, writes, and verifies the device |
 | `Makefile` | Builds the module using the running kernel build system |
 | `README.md` | Project explanation, build instructions, testing notes, and debugging guide |
 | `.gitignore` | Ignores kernel build artifacts and editor files |
@@ -193,6 +196,44 @@ fortune_device: loaded with major=<number> minor=0
 fortune_device: opened
 fortune_device: stored <number> byte fortune
 fortune_device: closed
+```
+
+## Userspace Test Program
+
+The repository includes `fortune_user_test.c`, a small userspace program that opens `/dev/fortune_device`, reads the current fortune, writes a new fortune, reads it back, and verifies that the returned data matches what was written.
+
+Build the test program:
+
+```bash
+make user-test
+```
+
+Run it after loading the kernel module:
+
+```bash
+sudo ./fortune_user_test
+```
+
+Or use the Makefile target:
+
+```bash
+make run-user-test
+```
+
+To use a different device path:
+
+```bash
+make run-user-test DEVICE=/path/to/device
+```
+
+Expected output:
+
+```text
+fortune_user_test: device=/dev/fortune_device
+initial fortune: Fortune favors the prepared kernel hacker.
+writing fortune: User program reached the kernel driver.
+updated fortune: User program reached the kernel driver.
+verification: ok
 ```
 
 ## Demo Output
